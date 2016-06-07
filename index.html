@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script type="text/javascript" src="scripts.js"></script>
+  <script type="text/javascript" src="canvasjs.min.js"></script>
+  <title>Trading Madness</title>
+  </head>
+
+<body>
+
+  <h1>Trading Madness</h1>
+
+  <p>
+    This is a simple trading game. Your goal is to try to make a profit.
+    Good luck!
+  </p>
+
+  <div id="marketSimulation">
+  </div>
+
+  <div id="stockValue">
+  </div>
+
+  <div>
+    <input type="button" onclick="toggleMarket()" value="Stop" id="startStop" />
+  </div>
+
+  <div>
+    Speed:
+    <input type="range" step="1" value="1" min="1" max="20" onchange="changeMarketSpeed(this.value)" />
+  </div>
+
+  <div>
+    <input type="button" onclick="" value="Market 1" id="market1" />
+    <input type="button" onclick="" value="Market 2" id="market2" />
+    <input type="button" onclick="" value="Market 3" id="market3" />
+  </div>
+
+  <div>
+    <input type="text" value="100" name="firstname" maxlength="7" size="7">
+    <input type="text" value="$100" name="firstname" maxlength="7" size="7">
+    <input type="button" onclick="" value="Buy" id="buy" />
+    <input type="button" onclick="" value="Sell/Short" id="sell" />
+  </div>
+
+  <div>
+    Shares: <span id="shares"> 0 </span>
+  </div>
+
+  <div>
+    Value:  <span id="value"> 0 </span>
+  </div>
+
+  <div>
+    Cash: <span id="cash"> 0 </span>
+  </div>
+
+  <div>
+    Net Gains: <span id="gains"> 0 </span>
+  </div>
+
+</body>
+</html>

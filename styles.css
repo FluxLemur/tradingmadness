@@ -1,0 +1,30 @@
+body {
+    background-color: white;
+    font-family: "Courier New";
+    text-align: center;
+    margin: 50px;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-size: 20px;
+}
+
+#marketSimulation {
+  width: 75%;
+  height: 300px;
+  margin: auto;
+}
+
+#stockValue {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+div {
+  margin-bottom: 10px;
+}
