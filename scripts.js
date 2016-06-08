@@ -121,7 +121,7 @@ function sell() {
     updateCash(stockValue);
     updateOwned(-1);
   } else {
-    alert("Insufficient stock");
+    alert("Insufficient shares");
   }
 }
 
