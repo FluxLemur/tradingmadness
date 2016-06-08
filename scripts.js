@@ -116,6 +116,15 @@ function buy() {
   }
 }
 
+function sell() {
+  if (sharesOwned > 0) {
+    updateCash(stockValue);
+    updateOwned(-1);
+  } else {
+    alert("Insufficient stock");
+  }
+}
+
 function setStockValue(value) {
   stockValue = yVal;
   updateCost();
@@ -149,6 +158,7 @@ function updateChart(chart, dps) {
   document.getElementById("stockValue").innerHTML = stockValue;
   if (stockValue == 0) {
     document.getElementById("stockValue").innerHTML += "... Bankrupt!";
+    alert("You lose");
     document.getElementById("startStop").value = "Restart";
     bankrupt = true;
   }
