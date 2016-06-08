@@ -4,10 +4,13 @@ var updateStock;
 var running = true;
 var bankrupt = false;
 var INTERVAL = 500;
+var VALUE_WINDOW = 500;
+
+var sharesOwned = 0;
+var cash = 100;
 
 var xVal;
 var yVal;
-var dataLength = 500; // number of dataPoints visible at any point
 
 var dps = []; // dataPoints
 var chart;
@@ -34,18 +37,19 @@ function stopMarket() {
 
 function runMarket(interval) {
   updateStock = setInterval(function(){updateChart(chart, dps)}, interval || INTERVAL);
+  document.getElementById("startStop").value = "Stop";
+  running = true;
 }
 
 function changeMarketSpeed(sliderValue) {
-  clearInterval(updateStock);
   var period = INTERVAL / sliderValue;
+  clearInterval(updateStock);
   runMarket(period);
 }
 
 function startMarket() {
-  document.getElementById("startStop").value = "Stop";
-  runMarket();
-  running = true;
+  var speed = document.getElementById("speedSlider").value;
+  changeMarketSpeed(speed);
 }
 
 function restartMarket() {
@@ -53,9 +57,15 @@ function restartMarket() {
   yVal = 100;
   //resetPoints(); //TODO: implement this
   bankrupt = false;
-  updateChart(chart, dps, dataLength);
+  updateChart(chart, dps);
   if (!bankrupt) {
     startMarket();
+  }
+}
+
+function stepMarket() {
+  if (!bankrupt) {
+    updateChart(chart, dps);
   }
 }
 
@@ -71,30 +81,67 @@ function toggleMarket() {
   }
 }
 
-function updateChart(chart, dps, count) {
+function updateCost() {
+  var num = parseInt(document.getElementById("shareNum").value);
+  if (num) {
+    document.getElementById("shareCost").value = '$' + num * stockValue;
+  }
+}
+
+function updateValue() {
+  document.getElementById("value").innerHTML = sharesOwned * stockValue;
+  document.getElementById("gains").innerHTML = cash + sharesOwned * stockValue - 100;
+}
+
+function updateOwned(num) {
+  sharesOwned += num;
+  document.getElementById("shares").innerHTML = sharesOwned;
+}
+
+function updateCash(delta) {
+  cash += delta;
+  document.getElementById("cash").innerHTML = cash;
+}
+
+function buy() {
+  var num = parseInt(document.getElementById("shareNum").value);
+  if (num) {
+    var cost = num * stockValue;
+    if (cost > cash) {
+      alert("Insufficient funds");
+    } else {
+      updateCash(-cost);
+      updateOwned(num);
+    }
+  }
+}
+
+function setStockValue(value) {
+  stockValue = yVal;
+  updateCost();
+  updateValue();
+}
+
+function updateChart(chart, dps) {
   if (bankrupt) {
     return;
   }
-  count = count || 1;
-  // count is number of times loop runs to generate random dataPoints.
 
-  for (var j = 0; j < count; j++) {
-    yVal = yVal +  Math.round(5 + Math.random() * (-10));
-    yVal = Math.max(yVal, 0);
+  yVal = yVal +  Math.round(5 + Math.random() * (-10));
+  yVal = Math.max(yVal, 0);
 
-    dps.push({
-      x: xVal,
-      y: yVal
-    });
-    xVal++;
+  dps.push({
+    x: xVal,
+    y: yVal
+  });
+  xVal++;
 
-    stockValue = yVal;
-    if (stockValue == 0) {
-      clearInterval(updateStock);
-      break;
-    }
+  setStockValue(yVal);
+  if (stockValue == 0) {
+    clearInterval(updateStock);
   }
-  if (dps.length > dataLength) {
+
+  if (dps.length > VALUE_WINDOW) {
     dps.shift();
   }
 
@@ -110,4 +157,5 @@ function updateChart(chart, dps, count) {
 window.onload = function() {
   createChart();
   restartMarket();
+  document.getElementById("cash").innerHTML = cash;
 }

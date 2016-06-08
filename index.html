@@ -25,24 +25,27 @@
 
   <div>
     <input type="button" onclick="toggleMarket()" value="Stop" id="startStop" />
+    <input type="button" onclick="stepMarket()" value="Step" id="step" />
   </div>
 
   <div>
     Speed:
-    <input type="range" step="1" value="1" min="1" max="20" onchange="changeMarketSpeed(this.value)" />
+    <input type="range" step="1" value="1" min="1" max="20" onchange="startMarket()" id="speedSlider"/>
   </div>
 
+  <!--
   <div>
     <input type="button" onclick="" value="Market 1" id="market1" />
     <input type="button" onclick="" value="Market 2" id="market2" />
     <input type="button" onclick="" value="Market 3" id="market3" />
   </div>
+  -->
 
   <div>
-    <input type="text" value="100" name="firstname" maxlength="7" size="7">
-    <input type="text" value="$100" name="firstname" maxlength="7" size="7">
-    <input type="button" onclick="" value="Buy" id="buy" />
-    <input type="button" onclick="" value="Sell/Short" id="sell" />
+    <input type="text" value="1" name="firstname" maxlength="7" size="7" id="shareNum" onchange="updateCost()">
+    <input type="text" value="" name="firstname" maxlength="7" size="7" id="shareCost" readonly>
+    <input type="button" onclick="buy()" value="Buy" id="buy" />
+    <input type="button" onclick="sell()" value="Sell" id="sell" />
   </div>
 
   <div>
