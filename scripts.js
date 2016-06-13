@@ -81,13 +81,6 @@ function toggleMarket() {
   }
 }
 
-function updateCost() {
-  var num = parseInt(document.getElementById("shareNum").value);
-  if (num) {
-    document.getElementById("shareCost").value = '$' + num * stockValue;
-  }
-}
-
 function updateValue() {
   document.getElementById("value").innerHTML = sharesOwned * stockValue;
   document.getElementById("gains").innerHTML = cash + sharesOwned * stockValue - 100;
@@ -103,16 +96,20 @@ function updateCash(delta) {
   document.getElementById("cash").innerHTML = cash;
 }
 
+function updateTransactions(operation) {
+  transactionArea = document.getElementById("transactions");
+  transactionArea.innerHTML += operation + "\t" + stockValue + "\n";
+  transactionArea.scrollTop = transactionArea.scrollHeight;
+}
+
 function buy() {
-  var num = parseInt(document.getElementById("shareNum").value);
-  if (num) {
-    var cost = num * stockValue;
-    if (cost > cash) {
-      alert("Insufficient funds");
-    } else {
-      updateCash(-cost);
-      updateOwned(num);
-    }
+  var cost = stockValue;
+  if (cost > cash) {
+    alert("Insufficient funds");
+  } else {
+    updateCash(-cost);
+    updateOwned(1);
+    updateTransactions("Buy");
   }
 }
 
@@ -120,6 +117,7 @@ function sell() {
   if (sharesOwned > 0) {
     updateCash(stockValue);
     updateOwned(-1);
+    updateTransactions("Sell");
   } else {
     alert("Insufficient shares");
   }
@@ -127,7 +125,6 @@ function sell() {
 
 function setStockValue(value) {
   stockValue = yVal;
-  updateCost();
   updateValue();
 }
 
@@ -136,7 +133,7 @@ function updateChart(chart, dps) {
     return;
   }
 
-  yVal = yVal +  Math.round(5 + Math.random() * (-10));
+  yVal = yVal + Math.round(5 + Math.random() * (-10));
   yVal = Math.max(yVal, 0);
 
   dps.push({
