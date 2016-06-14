@@ -6,9 +6,10 @@ var bankrupt = false;
 var INTERVAL = 500;
 var VALUE_WINDOW = 500;
 var currentMarket = 1;
+var noCongrats = true;
 
-var sharesOwned = 0;
-var cash = 100;
+var sharesOwned;
+var cash;
 
 var xVal;
 var yVal;
@@ -44,8 +45,10 @@ function runMarket(interval) {
 
 function changeMarketSpeed(sliderValue) {
   var period = INTERVAL / sliderValue;
-  clearInterval(updateStock);
-  runMarket(period);
+  if (!bankrupt) {
+    clearInterval(updateStock);
+    runMarket(period);
+  }
 }
 
 function startMarket() {
@@ -56,10 +59,16 @@ function startMarket() {
 function restartMarket() {
   xVal = 0;
   yVal = 100;
+
+  clearOwned();
+  resetCash();
+
   dps = [];
   chart.options.data[0].dataPoints = dps;
   bankrupt = false;
   updateChart(chart, dps);
+  noCongrats = true;
+
   if (!bankrupt) {
     startMarket();
   }
@@ -102,14 +111,29 @@ function updateValue() {
   document.getElementById("gains").innerHTML = cash + sharesOwned * stockValue - 100;
 }
 
+function clearOwned() {
+  sharesOwned = 0;
+  updateOwned(0);
+}
+
 function updateOwned(num) {
   sharesOwned += num;
   document.getElementById("shares").innerHTML = sharesOwned;
 }
 
+function resetCash() {
+  cash = 100;
+  updateCash(0);
+}
+
 function updateCash(delta) {
   cash += delta;
   document.getElementById("cash").innerHTML = cash;
+}
+
+
+function clearTransactions() {
+  document.getElementById("transactions").innerHTML = "";
 }
 
 function updateTransactions(operation) {
@@ -143,15 +167,17 @@ function setStockValue(value) {
   stockValue = yVal;
   updateValue();
 }
+
 function getNextValue() {
   if (currentMarket == 1) {
     return Math.round(5 + Math.random() * (-10));
   } else if (currentMarket == 2) {
-    return Math.round(7 + Math.random() * (-10));
+    return Math.round(6 + Math.random() * (-10));
   } else {
-    return Math.round(2 + Math.random() * (-10));
+    return Math.round(4 + Math.random() * (-10));
   }
 }
+
 function updateChart(chart, dps) {
   if (bankrupt) {
     return;
@@ -182,6 +208,9 @@ function updateChart(chart, dps) {
     alert("You lose");
     document.getElementById("startStop").value = "Restart";
     bankrupt = true;
+  } else if (noCongrats && stockValue * sharesOwned > 10000) {
+    noCongrats = false;
+    alert("Congratulations! You're rich.");
   }
 }
 
