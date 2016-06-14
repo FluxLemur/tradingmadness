@@ -97,8 +97,10 @@ function setCurrentMarket() {
     currentMarket = 1;
   } else if (document.getElementById("market2").checked) {
     currentMarket = 2;
-  } else {
+  } else if (document.getElementById("market3").checked) {
     currentMarket = 3;
+  } else {
+    currentMarket = 4;
   }
 }
 
@@ -170,11 +172,13 @@ function setStockValue(value) {
 
 function getNextValue() {
   if (currentMarket == 1) {
-    return Math.round(5 + Math.random() * (-10));
+    return Math.round(-5 + 10 * Math.random());
   } else if (currentMarket == 2) {
-    return Math.round(6 + Math.random() * (-10));
+    return Math.round(-6 + 10 * Math.random());
+  } else if (currentMarket == 3) {
+    return Math.round(-3 + 8 * Math.random());
   } else {
-    return Math.round(4 + Math.random() * (-10));
+    return Math.round(-10 + 20 * Math.random());
   }
 }
 
