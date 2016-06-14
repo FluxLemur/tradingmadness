@@ -5,6 +5,7 @@ var running = true;
 var bankrupt = false;
 var INTERVAL = 500;
 var VALUE_WINDOW = 500;
+var currentMarket = 1;
 
 var sharesOwned = 0;
 var cash = 100;
@@ -55,7 +56,6 @@ function startMarket() {
 function restartMarket() {
   xVal = 0;
   yVal = 100;
-  //context.clearRect(0, 0, canvas.width, canvas.height);
   dps = [];
   chart.options.data[0].dataPoints = dps;
   bankrupt = false;
@@ -83,19 +83,18 @@ function toggleMarket() {
   }
 }
 
-function changeMarket(newMarket) {
-  confirm("Are you sure you want to restart?");
-
+function setCurrentMarket() {
   if (document.getElementById("market1").checked) {
-    // run market 1
-    restartMarket();
+    currentMarket = 1;
   } else if (document.getElementById("market2").checked) {
-    // run market 2
-    restartMarket();
+    currentMarket = 2;
   } else {
-    // run market 3
-    restartMarket();
+    currentMarket = 3;
   }
+}
+
+function changeMarket(newMarket) {
+  setCurrentMarket();
 }
 
 function updateValue() {
@@ -144,13 +143,21 @@ function setStockValue(value) {
   stockValue = yVal;
   updateValue();
 }
-
+function getNextValue() {
+  if (currentMarket == 1) {
+    return Math.round(5 + Math.random() * (-10));
+  } else if (currentMarket == 2) {
+    return Math.round(7 + Math.random() * (-10));
+  } else {
+    return Math.round(2 + Math.random() * (-10));
+  }
+}
 function updateChart(chart, dps) {
   if (bankrupt) {
     return;
   }
 
-  yVal = yVal + Math.round(5 + Math.random() * (-10));
+  yVal = yVal + getNextValue();
   yVal = Math.max(yVal, 0);
 
   dps.push({
