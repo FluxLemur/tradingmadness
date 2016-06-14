@@ -55,7 +55,9 @@ function startMarket() {
 function restartMarket() {
   xVal = 0;
   yVal = 100;
-  //resetPoints(); //TODO: implement this
+  //context.clearRect(0, 0, canvas.width, canvas.height);
+  dps = [];
+  chart.options.data[0].dataPoints = dps;
   bankrupt = false;
   updateChart(chart, dps);
   if (!bankrupt) {
@@ -78,6 +80,21 @@ function toggleMarket() {
     } else {
       startMarket();
     }
+  }
+}
+
+function changeMarket(newMarket) {
+  confirm("Are you sure you want to restart?");
+
+  if (document.getElementById("market1").checked) {
+    // run market 1
+    restartMarket();
+  } else if (document.getElementById("market2").checked) {
+    // run market 2
+    restartMarket();
+  } else {
+    // run market 3
+    restartMarket();
   }
 }
 
