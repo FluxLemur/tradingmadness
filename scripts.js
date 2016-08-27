@@ -7,15 +7,23 @@ var INTERVAL = 500;
 var VALUE_WINDOW = 500;
 var currentMarket = 1;
 var noCongrats = true;
+var initialCash = 250;
 
 var sharesOwned;
 var cash;
+var netWorth;
 
 var xVal;
 var yVal;
 
 var dps = []; // dataPoints
 var chart;
+
+function notify(message, timeout) {
+  setTimeout(function() {
+    alert(message)
+  }, timeout);
+}
 
 function createChart() {
   chart = new CanvasJS.Chart("marketSimulation", {
@@ -109,8 +117,8 @@ function changeMarket(newMarket) {
 }
 
 function updateValue() {
-  document.getElementById("value").innerHTML = sharesOwned * stockValue;
-  document.getElementById("gains").innerHTML = cash + sharesOwned * stockValue - 100;
+  netWorth = cash + sharesOwned * stockValue;
+  document.getElementById("worth").innerHTML = netWorth;
 }
 
 function clearOwned() {
@@ -124,7 +132,7 @@ function updateOwned(num) {
 }
 
 function resetCash() {
-  cash = 100;
+  cash = initialCash;
   updateCash(0);
 }
 
@@ -147,7 +155,7 @@ function updateTransactions(operation) {
 function buy() {
   var cost = stockValue;
   if (cost > cash) {
-    alert("Insufficient funds");
+    notify("Insufficient funds", 0);
   } else {
     updateCash(-cost);
     updateOwned(1);
@@ -161,7 +169,7 @@ function sell() {
     updateOwned(-1);
     updateTransactions("Sell");
   } else {
-    alert("Insufficient shares");
+    notify("Insufficient shares", 0);
   }
 }
 
@@ -207,14 +215,20 @@ function updateChart(chart, dps) {
 
   chart.render();
   document.getElementById("stockValue").innerHTML = stockValue;
+
+  // end conditions
   if (stockValue == 0) {
-    document.getElementById("stockValue").innerHTML += "... Bankrupt!";
-    alert("You lose");
+    document.getElementById("stockValue").innerHTML += "... Game over";
     document.getElementById("startStop").value = "Restart";
     bankrupt = true;
+    if (netWorth < 0) {
+      notify("You're Bankrupt! You lost $" + (-netWorth), 50);
+    } else {
+      notify("Game over. You have a meager $" + netWorth, 50);
+    }
   } else if (noCongrats && stockValue * sharesOwned > 10000) {
     noCongrats = false;
-    alert("Congratulations! You're rich.");
+    notify("Congratulations! You're rich.", 50);
   }
 }
 
