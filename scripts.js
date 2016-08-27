@@ -228,6 +228,7 @@ function updateChart(chart, dps) {
     }
   } else if (noCongrats && stockValue * sharesOwned > 10000) {
     noCongrats = false;
+    stopMarket();
     notify("Congratulations! You're rich.", 50);
   }
 }
